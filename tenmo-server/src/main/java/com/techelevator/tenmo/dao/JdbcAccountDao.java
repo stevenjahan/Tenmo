@@ -4,7 +4,9 @@ import com.techelevator.tenmo.model.Account;
 
 import java.util.List;
 
-public class JdbacAccountDao implements AccountDao{
+public class JdbcAccountDao implements AccountDao{
+
+
     @Override
     public List<Account> getAllAccounts() {
         return null;

@@ -16,5 +16,7 @@ public interface AccountDao {
 
     double getTotalAccountBalance(int id);
 
-
+    boolean createAccount(Account account);
+    boolean updateAccount(Account account);
+    boolean deleteAccount(Account account);
 }

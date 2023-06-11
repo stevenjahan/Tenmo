@@ -2,6 +2,7 @@ package com.techelevator.tenmo.dao;
 
 import com.techelevator.tenmo.model.Account;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 public interface AccountDao {
@@ -12,9 +13,9 @@ public interface AccountDao {
 
     Account getAccountById(int id);
 
-    double getAccountBalanceById(int id);
+    BigDecimal getAccountBalanceById(int id);
 
-    double getTotalAccountBalance(int id);
+    BigDecimal getTotalAccountBalance(int id);
 
     boolean createAccount(Account account);
     boolean updateAccount(Account account);

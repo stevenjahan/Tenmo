@@ -20,4 +20,8 @@ public interface AccountDao {
     boolean createAccount(Account account);
     boolean updateAccount(Account account);
     boolean deleteAccount(Account account);
+
+    List<Account> listAccounts();
+
+    void deleteAccount(int account_id);
 }

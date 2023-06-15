@@ -51,4 +51,16 @@ public class Account {
                 ", balance=" + balance +
                 '}';
     }
+
+    public void setAccount_id(long nextAccountId) {
+    }
+
+    public Object getAccount_id() {
+    }
+
+    public Object getUser_id() {
+    }
+
+    public void setUser_id(int userId) {
+    }
 }

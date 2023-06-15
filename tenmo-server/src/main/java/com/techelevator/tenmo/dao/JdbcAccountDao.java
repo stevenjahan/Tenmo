@@ -1,56 +1,37 @@
 package com.techelevator.tenmo.dao;
 
-import com.techelevator.tenmo.model.Account;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-
-import javax.sql.DataSource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+
 import java.util.List;
 
-public class JdbcAccountDao implements AccountDao{
+import javax.sql.DataSource;
 
-    public static List<Account> accounts = new ArrayList<>();
-    private final JdbcTemplate jdbcTemplate;
-    public JdbcAccountDao(DataSource dataSource) {
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.rowset.SqlRowSet;
+import org.springframework.stereotype.Component;
+
+import com.techelevator.tenmo.model.Account;
+
+@Component
+class JdbcAccountDoa implements AccountDao {
+
+    private JdbcTemplate jdbcTemplate;
+
+    public JdbcAccountDoa(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-
     @Override
-    public List<Account> getAllAccounts() {
-        return null;
-    }
+    public boolean createAccount(Account newAccount) {
+        String sqlNewAccount ="INSERT INTO accounts "
+                + "(account_id, user_id, balance) "
+                + "VALUES(?,?, ?)";
 
-    @Override
-    public List<Account> getAccountsToEachUserId() {
-        return null;
-    }
+        newAccount.setAccount_id(getNextAccountId());
 
-    @Override
-    public Account getAccountById(int id) {
-        return null;
-    }
+        jdbcTemplate.update(sqlNewAccount, newAccount.getAccount_id(), newAccount.getUser_id(), newAccount.getBalance());
 
-    @Override
-    public BigDecimal getAccountBalanceById(int id) {
-        Account account = null;
-        String sql = "select user_id, account_id, balance from account where account_id = ?;";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
-        if(results.next()) {
-            account = mapRowToAccount(results);
-        }
-        return account.getBalance();
-    }
-
-    @Override
-    public BigDecimal getTotalAccountBalance(int id) {
-        return 0;
-    }
-
-    @Override
-    public boolean createAccount(Account account) {
         return false;
     }
 
@@ -64,11 +45,127 @@ public class JdbcAccountDao implements AccountDao{
         return false;
     }
 
-    private Account mapRowToAccount(SqlRowSet rowSet) {
-        Account account = new Account();
-        account.setUserId(rowSet.getInt("user_id"));
-        account.setId(rowSet.getInt("account_id"));
-        account.setBalance(rowSet.getBigDecimal("balance"));
-        return account;
+    public BigDecimal getBalanceByUserId(Long user_id) {
+        Account returnAccount = new Account();
+
+        String sqlreturnAccount = "SELECT * "
+                + "FROM accounts "
+                + "WHERE user_id = ? ";
+
+        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlreturnAccount, user_id);
+
+        if(accountQuery.next()) {
+            returnAccount =  mapRowToAccount(accountQuery);
+        }
+
+        return returnAccount.getBalance();
     }
+
+    @Override
+    public List<Account> getAllAccounts() {
+        return null;
+    }
+
+    @Override
+    public List<Account> getAccountsToEachUserId() {
+        return null;
+    }
+
+    @Override
+    public Account getAccountById(int account_id) {
+        Account newAccount = new Account();
+        String sqlGetAccount = "SELECT * "
+                + "FROM accounts "
+                + "WHERE account_id = ?";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccount, account_id);
+        if (results.next()) {
+            newAccount = mapRowToAccount(results);
+        }
+        return newAccount;
+    }
+
+    @Override
+    public BigDecimal getAccountBalanceById(int id) {
+        return null;
+    }
+
+    @Override
+    public BigDecimal getTotalAccountBalance(int id) {
+        return null;
+    }
+
+    @Override
+    public List<Account> listAccounts() {
+        List<Account> returnList = new ArrayList<Account>();
+
+        String sqlListAccounts = "SELECT * "
+                + "FROM accounts";
+
+
+        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlListAccounts);
+
+        while(accountQuery.next()) {
+            Account theAccount =  mapRowToAccount(accountQuery);
+            returnList.add(theAccount);
+        }
+
+        return returnList;
+    }
+
+    public BigDecimal addToBalance(double amount_to_add, int account_id) {
+
+        Account updateAccount = getAccountById(account_id);
+
+        BigDecimal newBalance = updateAccount.getBalance();
+
+        String sqlUpdateAccount = "UPDATE accounts "
+                + "SET balance = ? WHERE account_id = ?";
+
+        jdbcTemplate.update(sqlUpdateAccount, newBalance, account_id);
+
+        return newBalance;
+    }
+
+    public BigDecimal subtractFromBalance(double amount_to_sub, int account_id) {
+
+        Account updateAccount = getAccountById(account_id);
+
+        BigDecimal newBalance = updateAccount.getBalance();
+
+        String sqlUpdateAccount = "UPDATE accounts "
+                + "SET balance = ? WHERE account_id = ?";
+
+        jdbcTemplate.update(sqlUpdateAccount, newBalance, account_id);
+
+        return newBalance;
+    }
+
+    @Override
+    public void deleteAccount(int account_id) {
+        String sqlDeleteAccount = "DELETE from accounts where account_id = ? ";
+
+        jdbcTemplate.update(sqlDeleteAccount, account_id);
+
+    }
+
+    private Account mapRowToAccount(SqlRowSet results) {
+        Account theAccount = new Account();
+
+        theAccount.setAccount_id(results.getLong("account_id"));
+        theAccount.setUser_id(results.getInt("user_id"));
+        theAccount.setBalance(BigDecimal.valueOf(results.getDouble("balance")));
+
+        return theAccount;
+    }
+
+    private long getNextAccountId() {
+        SqlRowSet nextAccountIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_account_id')");
+
+        if(nextAccountIdResult.next()) {
+            return nextAccountIdResult.getLong(1);
+        }else {
+            throw new RuntimeException ("Something went wrong while getting an id for the new transfer");
+        }
+    }
+
 }

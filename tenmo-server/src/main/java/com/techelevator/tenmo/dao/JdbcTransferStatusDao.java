@@ -16,7 +16,7 @@ public class JdbcTransferStatusDao implements TransferStatusDao{
     @Override
     public int getStatusId(int id) {
         int statusId = 0;
-        String sql = "SELECT transfer_status_id " +
+        String sql = "SELECT transfer.transfer_status_id " +
                 "FROM transfer_status " +
                 "JOIN transfer " +
                 "ON transfer_status.transfer_status_id = transfer.transfer_status_id " +

@@ -43,12 +43,30 @@ public class JdbcTransferStatusDao implements TransferStatusDao{
         TransferStatus transferStatus = null;
 
         if (result.next()) {
-            int transferStatusID = result.getInt("transfer_status_id");
-            String transferStatusDesc = result.getString("transfer_status_desc");
-            transferStatus = new TransferStatus(transferStatusID, transferStatusDesc);
+            int tempTransferStatusId = result.getInt("transfer_status_id");
+            String tempTransferStatusDesc = result.getString("transfer_status_desc");
+            transferStatus = new TransferStatus(tempTransferStatusId, tempTransferStatusDesc);
 
         }
 
+        return transferStatus;
+    }
+
+    @Override
+    public TransferStatus getTransferStatusById(int transferStatusId) {
+        TransferStatus transferStatus = null;
+
+        String sql = "SELECT transfer_status_id, transfer_status_desc " +
+                "FROM transfer_status " +
+                "WHERE transfer_status_id = ?;";
+
+        SqlRowSet result = jdbcTemplate.queryForRowSet(sql, transferStatusId);
+
+        if(result.next()) {
+            int tempTransferStatusId = result.getInt("transfer_status_id");
+            String tempTransferStatusDesc = result.getString("transfer_status_desc");
+            transferStatus = new TransferStatus(tempTransferStatusId, tempTransferStatusDesc);
+        }
         return transferStatus;
     }
 }

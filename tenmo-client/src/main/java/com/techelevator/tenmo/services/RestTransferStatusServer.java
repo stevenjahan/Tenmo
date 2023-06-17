@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.TransferStatus;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,11 @@ public class RestTransferStatusServer implements TransferStatusService {
 
     public RestTransferStatusServer(String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    @Override
+    public TransferStatus getTransferStatus(AuthenticatedUser authenticatedUser, String description) {
+        return null;
     }
 
     @Override

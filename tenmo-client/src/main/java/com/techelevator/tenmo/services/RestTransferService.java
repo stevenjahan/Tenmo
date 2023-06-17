@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -8,8 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
-
-import java.awt.datatransfer.Transferable;
 
 public class RestTransferService implements TransferService {
     private String baseUrl;
@@ -22,7 +21,7 @@ public class RestTransferService implements TransferService {
     @Override
     public void createTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
         try {
-            restTemplate.exchange(baseUrl, HttpMethod.POST, entity, Transfer.class);
+            restTemplate.exchange(baseUrl, HttpMethod.POST, makeEntity(authenticatedUser), Transfer.class);
         } catch(RestClientResponseException e) {
             if (e.getMessage().contains("Insufficient funds")) {
                 System.out.println("You do not have enough money for that transaction.");
@@ -85,7 +84,7 @@ public class RestTransferService implements TransferService {
     public Transfer[] getPendingTransfersByUserId(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
         try {
-            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId() + "/pending", HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody;
+            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId() + "/pending", HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {

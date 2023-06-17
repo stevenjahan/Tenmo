@@ -56,9 +56,11 @@ public class Account {
     }
 
     public Object getAccount_id() {
+        return 0;
     }
 
     public Object getUser_id() {
+        return 0;
     }
 
     public void setUser_id(int userId) {

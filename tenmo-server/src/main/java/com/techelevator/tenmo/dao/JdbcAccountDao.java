@@ -14,11 +14,11 @@ import org.springframework.stereotype.Component;
 import com.techelevator.tenmo.model.Account;
 
 @Component
-class JdbcAccountDoa implements AccountDao {
+class JdbcAccountDao implements AccountDao {
 
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcAccountDoa(DataSource dataSource) {
+    public JdbcAccountDao(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 

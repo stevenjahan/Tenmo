@@ -82,4 +82,16 @@ public class Transfer {
                 ", transferAmount=" + transferAmount +
                 '}';
     }
+
+    public Object getAccountFrom() {
+        return null;
+    }
+
+    public Object getAccountTo() {
+        return null;
+    }
+
+    public Object getAmount() {
+        return null;
+    }
 }

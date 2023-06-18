@@ -40,7 +40,7 @@ public class RestAccountService implements AccountService{
     public Account getAccountByUserId(AuthenticatedUser authenticatedUser, int userId) {
         Account account = null;
         try {
-            account = restTemplate.exchange(baseUrl + "account/user/" + userId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
+            account = restTemplate.exchange(baseUrl + "/account/user/" + userId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
         } catch(RestClientResponseException e) {
             System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
         } catch(ResourceAccessException e) {

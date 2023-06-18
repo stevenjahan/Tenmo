@@ -12,11 +12,11 @@ public class App {
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
-    private RestAccountService accountService;
-    private RestUserService userService;
-    private RestTransferTypeService transferTypeService;
-    private RestTransferStatusService transferStatusService;
-    private RestTransferService transferService;
+    private RestAccountService accountService = new RestAccountService(API_BASE_URL);
+    private RestUserService userService = new RestUserService();
+    private RestTransferTypeService transferTypeService = new RestTransferTypeService(API_BASE_URL);
+    private RestTransferStatusService transferStatusService = new RestTransferStatusService(API_BASE_URL);
+    private RestTransferService transferService = new RestTransferService(API_BASE_URL);
 
 
     private AuthenticatedUser currentUser;

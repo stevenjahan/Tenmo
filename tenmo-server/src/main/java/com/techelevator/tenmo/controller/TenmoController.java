@@ -17,25 +17,25 @@ import java.util.List;
 public class TenmoController {
 
     @Autowired
-    AccountDao accountDAO;
+    AccountDao AccountDao;
     @Autowired
-    UserDao userDao;
+    UserDao UserDao;
     @Autowired
-    TransferDao transferDAO;
+    TransferDao TransferDao;
     @Autowired
-    TransferTypeDao transferTypeDao;
+    TransferTypeDao TransferTypeDao;
     @Autowired
-    TransferStatusDao transferStatusDAO;
+    TransferStatusDao TransferStatusDao;
 
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
     public Balance getBalance(Principal principal) {
         System.out.println(principal.getName());
-        return accountDAO.getBalance(principal.getName());
+        return AccountDao.getBalance(principal.getName());
     }
 
     @RequestMapping(path="/users", method = RequestMethod.GET)
     public List<User> getUsers() {
-        return userDao.findAll();
+        return UserDao.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,91 +43,91 @@ public class TenmoController {
     public void addTransfer(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFunds {
 
         BigDecimal amountToTransfer = (BigDecimal) transfer.getAmount();
-        Account accountFrom = accountDAO.getAccountByAccountID(transfer.getAccountFrom());
-        Account accountTo = accountDAO.getAccountByAccountID(transfer.getAccountTo());
+        Account accountFrom = AccountDao.getAccountId(transfer.getAccountFrom());
+        Account accountTo = AccountDao.getAccountId(transfer.getAccountTo());
 
         accountFrom.getBalance().sendMoney(amountToTransfer);
         accountTo.getBalance().receiveMoney(amountToTransfer);
 
-        transferDAO.createTransfer(transfer);
+        TransferDao.createTransfer(transfer);
 
-        accountDAO.updateAccount(accountFrom);
-        accountDAO.updateAccount(accountTo);
+        AccountDao.updateAccount(accountFrom);
+        AccountDao.updateAccount(accountTo);
     }
 
     @RequestMapping(path="/transfertype/filter", method = RequestMethod.GET)
     public TransferType getTransferTypeFromDescription(@RequestParam String description) {
-        return transferTypeDao.getTransferTypeFromDescription(description);
+        return TransferDao.getTransferTypeFromDescription(description);
     }
 
     @RequestMapping(path="/transferstatus/filter", method = RequestMethod.GET)
     public TransferStatus getTransferStatusByDescription(@RequestParam String description) {
-        return transferStatusDAO.getTransferStatusByDesc(description);
+        return TransferStatusDao.getTransferStatusByDesc(description);
     }
 
     @RequestMapping(path="/account/user/{id}", method = RequestMethod.GET)
     public Account getAccountByUserId(@PathVariable int id) {
-        return accountDAO.getAccountByUserID(id);
+        return AccountDao.getAccountByUserID(id);
     }
 
     @RequestMapping(path="/account/{id}", method = RequestMethod.GET)
     public Account getAccountFromAccountId(@PathVariable int id) {
-        return accountDAO.getAccountByAccountID(id);
+        return AccountDao.getAccountByAccountID(id);
     }
 
     @RequestMapping(path="/transfers/user/{userId}", method = RequestMethod.GET)
     public List<Transfer> getTransfersByUserId(@PathVariable int userId) {
-        return transferDAO.getTransfersByUserId(userId);
+        return TransferDao.getTransfersByUserId(userId);
     }
 
     @RequestMapping(path="/transfers/{id}", method = RequestMethod.GET)
     public Transfer getTransferById(@PathVariable int id) {
-        return transferDAO.getTransferByTransferId(id);
+        return TransferDao.getTransferByTransferId(id);
     }
 
     @RequestMapping(path="/users/{id}", method = RequestMethod.GET)
     public User getUserByUserId(@PathVariable int id) {
-        return userDao.getUserByUserId(id);
+        return UserDao.getUserByUserId(id);
     }
 
     @RequestMapping(path="/transfers", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers() {
-        return transferDAO.getAllTransfers();
+        return TransferDao.getAllTransfers();
     }
 
     @RequestMapping(path="/transfertype/{id}", method = RequestMethod.GET)
     public TransferType getTransferDescFromId(@PathVariable int id)  {
-        return transferTypeDao.getTransferTypeFromId(id);
+        return TransferTypeDao.getTransferTypeFromId(id);
     }
     @RequestMapping(path="/transferstatus/{id}", method = RequestMethod.GET)
     public TransferStatus getTransferStatusFromId(@PathVariable int id) {
-        return transferStatusDAO.getTransferStatusById(id);
+        return TransferStatusDao.getTransferStatusById(id);
     }
 
     @RequestMapping(path="/transfers/user/{userId}/pending", method = RequestMethod.GET)
     public List<Transfer> getPendingTransfersByUserId(@PathVariable int userId) {
-        return transferDAO.getPendingTransfers(userId);
+        return TransferDao.getPendingTransfers(userId);
     }
 
     @RequestMapping(path="/transfers/{id}", method = RequestMethod.PUT)
     public void updateTransferStatus(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFunds {
 
         // only go through with the transfer if it is approved
-        if(transfer.getTransferStatusId() == transferStatusDAO.getTransferStatusByDesc("Approved").getTransferStatusId()) {
+        if(transfer.getTransferStatusId() == TransferStatusDao.getTransferStatusByDesc("Approved").getTransferStatusId()) {
 
             BigDecimal amountToTransfer = (BigDecimal) transfer.getAmount();
-            Account accountFrom = accountDAO.getAccountByAccountID(transfer.getAccountFrom());
-            Account accountTo = accountDAO.getAccountByAccountID(transfer.getAccountTo());
+            Account accountFrom = AccountDao.getAccountByAccountID(transfer.getAccountFrom());
+            Account accountTo = AccountDao.getAccountByAccountID(transfer.getAccountTo());
 
             accountFrom.getBalance().sendMoney(amountToTransfer);
             accountTo.getBalance().receiveMoney(amountToTransfer);
 
-            transferDAO.updateTransfer(transfer);
+            TransferDao.updateTransfer(transfer);
 
-            accountDAO.updateAccount(accountFrom);
-            accountDAO.updateAccount(accountTo);
+            AccountDao.updateAccount(accountFrom);
+            AccountDao.updateAccount(accountTo);
         } else {
-            transferDAO.updateTransfer(transfer);
+            TransferDao.updateTransfer(transfer);
         }
 
     }

@@ -1,7 +1,6 @@
 package com.techelevator.tenmo.dao;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 import java.util.List;
 
@@ -23,53 +22,23 @@ class JdbcAccountDao implements AccountDao {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    @Override
-    public boolean createAccount(Account newAccount) {
-        String sqlNewAccount ="INSERT INTO accounts "
-                + "(account_id, user_id, balance) "
-                + "VALUES(?,?, ?)";
 
-        newAccount.setAccount_id(getNextAccountId());
 
-        jdbcTemplate.update(sqlNewAccount, newAccount.getAccount_id(), newAccount.getUser_id(), newAccount.getBalance());
-
-        return false;
-    }
-
-    @Override
-    public boolean updateAccount(Account account) {
-        return false;
-    }
-
-    @Override
-    public boolean deleteAccount(Account account) {
-        return false;
-    }
-
-    @Override
-    public List<Account> listAccounts() {
-        return null;
-    }
-
-    @Override
-    public void deleteAccount(int account_id) {
-
-    }
 
     public BigDecimal getBalanceByUserId(Long user_id) {
         Account returnAccount = new Account();
 
-        String sqlreturnAccount = "SELECT * "
+        String sqlReturnAccount = "SELECT * "
                 + "FROM accounts "
                 + "WHERE user_id = ? ";
 
-        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlreturnAccount, user_id);
+        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlReturnAccount, user_id);
 
         if(accountQuery.next()) {
-            returnAccount =  mapRowToAccount(accountQuery);
+            returnAccount =  mapResultsToAccount(accountQuery);
         }
 
-        return returnAccount.getBalance();
+        return returnAccount.getBalance().getBalance();
     }
 
     @Override
@@ -90,20 +59,11 @@ class JdbcAccountDao implements AccountDao {
                 + "WHERE account_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccount, account_id);
         if (results.next()) {
-            newAccount = mapRowToAccount(results);
+            newAccount = mapResultsToAccount(results);
         }
         return newAccount;
     }
 
-    @Override
-    public BigDecimal getAccountBalanceById(int id) {
-        return null;
-    }
-
-    @Override
-    public BigDecimal getTotalAccountBalance(int id) {
-        return null;
-    }
 
     @Override
     public Balance getBalance(String user) {
@@ -112,6 +72,7 @@ class JdbcAccountDao implements AccountDao {
         Balance balance = new Balance();
         if (results.next()) {
             String accountBalance = results.getString("balance");
+            assert accountBalance != null;
             balance.setBalance(new BigDecimal(accountBalance));
         }
         return balance;
@@ -123,7 +84,7 @@ class JdbcAccountDao implements AccountDao {
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         Account account = null;
         if (results.next()) {
-            account = mapRowToAccount(results);
+            account = mapResultsToAccount(results);
         }
         return account;
     }
@@ -145,7 +106,7 @@ class JdbcAccountDao implements AccountDao {
             "Set balance = ? " +
             "where account_id = ?;";
 
-        jdbcTemplate.update(sql, accountToUpdate.getBalance(), accountToUpdate.getAccount_id());
+        jdbcTemplate.update(sql, accountToUpdate.getBalance(), accountToUpdate.getAccountId(transfer.getAccountTo()));
     }
 
     private Account mapResultsToAccount(SqlRowSet results) {

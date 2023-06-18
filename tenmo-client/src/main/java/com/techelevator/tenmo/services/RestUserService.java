@@ -14,11 +14,11 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 
 public class RestUserService implements UserService{
-    private RestTemplate restTemplate;
-    private final String BASE_URL = "http://localhost:8080/";
+    private String baseUrl;
+    private RestTemplate restTemplate = new RestTemplate();
 
-    public RestUserService() {
-        this.restTemplate = new RestTemplate();
+    public RestUserService(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 
     @Override
@@ -26,7 +26,7 @@ public class RestUserService implements UserService{
         User[] users = null;
 
         try {
-            users = restTemplate.exchange(BASE_URL + "/tenmo_user", HttpMethod.GET, makeEntity(authenticatedUser), User[].class).getBody();
+            users = restTemplate.exchange(baseUrl + "/tenmo_user", HttpMethod.GET, makeEntity(authenticatedUser), User[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -40,7 +40,7 @@ public class RestUserService implements UserService{
         User user = null;
 
         try {
-            user = restTemplate.exchange(BASE_URL + "/tenmo_user/" + id, HttpMethod.GET, makeEntity(authenticatedUser), User.class).getBody();
+            user = restTemplate.exchange(baseUrl + "/tenmo_user/" + id, HttpMethod.GET, makeEntity(authenticatedUser), User.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -55,7 +55,11 @@ public class RestUserService implements UserService{
         System.out.println("ID          Name");
         System.out.println("-------------------------------");
 
-        System.out.println(Arrays.toString(users));
+        for(User user: users) {
+            System.out.println(user.getId() + "        " + user.getUsername());
+        }
+        System.out.println("---------");
+        System.out.flush();
     }
     public boolean validateUserChoice(int userIdChoice, User[] users, AuthenticatedUser currentUser) {
         if(userIdChoice != 0) {
@@ -71,7 +75,7 @@ public class RestUserService implements UserService{
                         break;
                     }
                 }
-                if (validUserIdChoice == false) {
+                if (!validUserIdChoice) {
                     throw new UserNotFoundException();
                 }
                 return true;

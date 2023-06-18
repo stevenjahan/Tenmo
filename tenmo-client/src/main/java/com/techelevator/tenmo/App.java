@@ -13,7 +13,7 @@ public class App {
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
     private RestAccountService accountService = new RestAccountService(API_BASE_URL);
-    private RestUserService userService = new RestUserService();
+    private RestUserService userService = new RestUserService(API_BASE_URL);
     private RestTransferTypeService transferTypeService = new RestTransferTypeService(API_BASE_URL);
     private RestTransferStatusService transferStatusService = new RestTransferStatusService(API_BASE_URL);
     private RestTransferService transferService = new RestTransferService(API_BASE_URL);

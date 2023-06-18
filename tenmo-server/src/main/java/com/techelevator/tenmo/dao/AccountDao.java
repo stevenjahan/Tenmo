@@ -8,11 +8,13 @@ import java.util.List;
 
 public interface AccountDao {
 
-    static Account getAccountId(Object accountTo) {
-    }
+     Account getAccountId(int accountId);
 
     Balance getBalance(String user);
     Account getAccountByUserId(int userId);
     Account getAccountByAccountId(int accountId);
+
+    Account updateAccount(Account account);
+
 
 }

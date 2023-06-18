@@ -18,8 +18,8 @@ public class Account {
     }
 
 
-    public static int getAccountId(int accountId) {
-        return accountId;
+    public int getAccountId() {
+        return this.accountId;
     }
 
     public void setAccountId(int id) {

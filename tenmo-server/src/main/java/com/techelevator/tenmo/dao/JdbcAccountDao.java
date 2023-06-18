@@ -7,6 +7,7 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import com.techelevator.tenmo.model.Balance;
+import com.techelevator.tenmo.model.Transfer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -40,24 +41,13 @@ class JdbcAccountDao implements AccountDao {
 
         return returnAccount.getBalance().getBalance();
     }
-
     @Override
-    public List<Account> getAllAccounts() {
-        return null;
-    }
-
-    @Override
-    public List<Account> getAccountsToEachUserId() {
-        return null;
-    }
-
-    @Override
-    public Account getAccountById(int account_id) {
+    public Account getAccountId(int accountId) {
         Account newAccount = new Account();
         String sqlGetAccount = "SELECT * "
                 + "FROM accounts "
                 + "WHERE account_id = ?";
-        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccount, account_id);
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccount, accountId);
         if (results.next()) {
             newAccount = mapResultsToAccount(results);
         }
@@ -65,9 +55,11 @@ class JdbcAccountDao implements AccountDao {
     }
 
 
+
+
     @Override
     public Balance getBalance(String user) {
-        String sql = "Select balance from accounts join users on accounts.user_id where username = ?;";
+        String sql = "Select balance from account join tenmo_user on account.user_id = tenmo_user.user_id where username = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, user);
         Balance balance = new Balance();
         if (results.next()) {
@@ -100,13 +92,16 @@ class JdbcAccountDao implements AccountDao {
         return account;
     }
 
+
+
     @Override
-    public void updateAccount(Account accountToUpdate) {
+    public Account updateAccount(Account accountToUpdate) {
         String sql = "Update accounts " +
             "Set balance = ? " +
             "where account_id = ?;";
 
-        jdbcTemplate.update(sql, accountToUpdate.getBalance(), accountToUpdate.getAccountId(transfer.getAccountTo()));
+        jdbcTemplate.update(sql, accountToUpdate.getBalance(), accountToUpdate.getAccountId());
+        return accountToUpdate;
     }
 
     private Account mapResultsToAccount(SqlRowSet results) {

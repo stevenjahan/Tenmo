@@ -11,18 +11,20 @@ public class Transfer {
     private int toAccountNumber;
     private BigDecimal transferAmount;
 
-    public Transfer() { }
+    public Transfer() {
+    }
 
     public Transfer(int transferId, int transferTypeId,
                     int transferStatusId, int fromAccountNumber,
                     int toAccountNumber, BigDecimal transferAmount) {
         this.transferId = transferId;
         this.transferTypeId = transferTypeId;
-        this. transferStatusId = transferStatusId;
+        this.transferStatusId = transferStatusId;
         this.fromAccountNumber = fromAccountNumber;
         this.toAccountNumber = toAccountNumber;
         this.transferAmount = transferAmount;
     }
+
     public int getTransferId() {
         return transferId;
     }
@@ -81,17 +83,5 @@ public class Transfer {
                 ", toAccountNumber=" + toAccountNumber +
                 ", transferAmount=" + transferAmount +
                 '}';
-    }
-
-    public Object getAccountFrom() {
-        return null;
-    }
-
-    public Object getAccountTo() {
-        return null;
-    }
-
-    public Object getAmount() {
-        return null;
     }
 }

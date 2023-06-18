@@ -87,7 +87,11 @@ public class TenmoController {
 
     @RequestMapping(path="/users/{id}", method = RequestMethod.GET)
     public User getUserByUserId(@PathVariable int id) {
+<<<<<<< HEAD
         return UserDao.getUserByUserId(id);
+=======
+        return userDao.getUserById(id);
+>>>>>>> ea7fcfe60209a0558ce77116c6cb6ca3f42c9200
     }
 
     @RequestMapping(path="/transfers", method = RequestMethod.GET)

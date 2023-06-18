@@ -1,9 +1,9 @@
 package com.techelevator.tenmo;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.Balance;
 import com.techelevator.tenmo.model.UserCredentials;
-import com.techelevator.tenmo.services.AuthenticationService;
-import com.techelevator.tenmo.services.ConsoleService;
+import com.techelevator.tenmo.services.*;
 
 public class App {
 
@@ -12,7 +12,10 @@ public class App {
     private final ConsoleService consoleService = new ConsoleService();
     private final AuthenticationService authenticationService = new AuthenticationService(API_BASE_URL);
 
+
     private AuthenticatedUser currentUser;
+
+    private static int transferIdNumber;
 
     public static void main(String[] args) {
         App app = new App();
@@ -85,28 +88,64 @@ public class App {
     }
 
 	private void viewCurrentBalance() {
-		// TODO Auto-generated method stub
-		
-	}
+        Balance balance = accountService.getBalance(currentUser);
+        System.out.println("Your current account balance is:  $" + balance.getBalance());
+    }
 
 	private void viewTransferHistory() {
-		// TODO Auto-generated method stub
-		
+        Transfer[] transfers = transferService.getTransfersFromUserId(currentUser, currentUser.getUser().getId());
+        System.out.println("-------------------------------");
+        System.out.println("Transfers");
+        System.out.println("ID     From/To          Amount");
+        System.out.println("-------------------------------");
+
+        int currentUserAccountId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+        for(Transfer transfer: transfers) {
+            printTransferStubDetails(currentUser, transfer);
+        }
+
+        int transferIdChoice = console.getUserInputInteger("\nPlease enter transfer ID to view details (0 to cancel)");
+        Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
+        if(transferChoice != null) {
+            printTransferDetails(currentUser, transferChoice);
+        }
 	}
 
 	private void viewPendingRequests() {
-		// TODO Auto-generated method stub
-		
-	}
+        Transfer[] transfers = transferService.getPendingTransfersByUserId(currentUser);
+        System.out.println("-------------------------------");
+        System.out.println("Pending Transfers");
+        System.out.println("ID          To          Amount");
+        System.out.println("-------------------------------");
+
+        for(Transfer transfer: transfers) {
+            printTransferStubDetails(currentUser, transfer);
+        }
+        // TODO ask to view details
+        int transferIdChoice = console.getUserInputInteger("\nPlease enter transfer ID to approve/reject (0 to cancel)");
+        Transfer transferChoice = validateTransferIdChoice(transferIdChoice, transfers, currentUser);
+        if(transferChoice != null) {
+            approveOrReject(transferChoice, currentUser);
+        }
+    }
 
 	private void sendBucks() {
-		// TODO Auto-generated method stub
-		
-	}
+        User[] users = userService.getAllUsers(currentUser);
+        printUserOptions(currentUser, users);
+
+        int userIdChoice = console.getUserInputInteger("Enter ID of user you are sending to (0 to cancel)");
+        if (validateUserChoice(userIdChoice, users, currentUser)) {
+            String amountChoice = console.getUserInput("Enter amount");
+            createTransfer(userIdChoice, amountChoice, "Send", "Approved");
+        }
+    }
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
-	}
-
+        User[] users = userService.getAllUsers(currentUser);
+        printUserOptions(currentUser, users);
+        int userIdChoice = console.getUserInputInteger("Enter ID of user you are requesting from (0 to cancel)");
+        if (validateUserChoice(userIdChoice, users, currentUser)) {
+            String amountChoice = console.getUserInput("Enter amount");
+            createTransfer(userIdChoice, amountChoice, "Request", "Pending");
+        }
 }

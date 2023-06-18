@@ -9,11 +9,11 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
-public class RestTransferStatusServer implements TransferStatusService {
+public class RestTransferStatusService implements TransferStatusService {
     private final String baseUrl;
     private RestTemplate restTemplate = new RestTemplate();
 
-    public RestTransferStatusServer(String baseUrl) {
+    public RestTransferStatusService(String baseUrl) {
         this.baseUrl = baseUrl;
     }
 

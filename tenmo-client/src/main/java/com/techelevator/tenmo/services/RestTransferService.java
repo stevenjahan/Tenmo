@@ -1,11 +1,13 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.exeptions.InvalidTransferIdChoice;
 import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.Transfer;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
@@ -114,4 +116,26 @@ public class RestTransferService implements TransferService {
             System.out.println("Could not complete the request due to server network issues.  Please try again later.");
         }
     }
+    public Transfer validateTransferIdChoice(int transferIdChoice, Transfer[] transfers, AuthenticatedUser currentUser) {
+        Transfer transferChoice = null;
+        if(transferIdChoice != 0) {
+            try {
+                boolean validTransferIdChoice = false;
+                for (Transfer transfer : transfers) {
+                    if (transfer.getTransferId() == transferIdChoice) {
+                        validTransferIdChoice = true;
+                        transferChoice = transfer;
+                        break;
+                    }
+                }
+                if (!validTransferIdChoice) {
+                    throw new InvalidTransferIdChoice();
+                }
+            } catch (InvalidTransferIdChoice e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return transferChoice;
+    }
+
 }

@@ -27,19 +27,19 @@ public class TenmoController {
     @Autowired
     TransferStatusDao TransferStatusDao;
 
-    @RequestMapping(path = "/balance", method = RequestMethod.GET)
+    @RequestMapping(path = "/account/user_id/balance", method = RequestMethod.GET)
     public Balance getBalance(Principal principal) {
         System.out.println(principal.getName());
         return AccountDao.getBalance(principal.getName());
     }
 
-    @RequestMapping(path="/users", method = RequestMethod.GET)
+    @RequestMapping(path="/tenmo_user", method = RequestMethod.GET)
     public List<User> getUsers() {
         return UserDao.findAll();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.POST)
+    @RequestMapping(path="/transfer/{id}", method = RequestMethod.POST)
     public void addTransfer(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFunds {
 
         BigDecimal amountToTransfer = (BigDecimal) transfer.getTransferAmount();
@@ -55,17 +55,17 @@ public class TenmoController {
         AccountDao.updateAccount(accountTo);
     }
 
-    @RequestMapping(path="/transfertype/filter", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer_type/filter", method = RequestMethod.GET)
     public TransferType getTransferTypeFromDescription(@RequestParam String description) {
         return TransferTypeDao.getTransferTypeFromDescription(description);
     }
 
-    @RequestMapping(path="/transferstatus/filter", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer_status/filter", method = RequestMethod.GET)
     public TransferStatus getTransferStatusByDescription(@RequestParam String description) {
         return TransferStatusDao.getTransferStatusByDesc(description);
     }
 
-    @RequestMapping(path="/account/user/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/account/tenmo_user/{id}", method = RequestMethod.GET)
     public Account getAccountByUserId(@PathVariable int id) {
         return AccountDao.getAccountByUserId(id);
     }
@@ -75,17 +75,17 @@ public class TenmoController {
         return AccountDao.getAccountByAccountId(id);
     }
 
-    @RequestMapping(path="/transfers/user/{userId}", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer/tenmo_user/{userId}", method = RequestMethod.GET)
     public List<Transfer> getTransfersByUserId(@PathVariable int userId) {
         return TransferDao.getTransfersByUserId(userId);
     }
 
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer/{id}", method = RequestMethod.GET)
     public Transfer getTransferById(@PathVariable int id) {
         return TransferDao.getTransferByTransferId(id);
     }
 
-    @RequestMapping(path="/users/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/tenmo_users/{id}", method = RequestMethod.GET)
     public User getUserByUserId(@PathVariable int id) {
 
         return UserDao.getUserById(id);
@@ -97,21 +97,21 @@ public class TenmoController {
         return TransferDao.getAllTransfers();
     }
 
-    @RequestMapping(path="/transfertype/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer_type/{id}", method = RequestMethod.GET)
     public TransferType getTransferDescFromId(@PathVariable int id)  {
         return TransferTypeDao.getTransferTypeFromId(id);
     }
-    @RequestMapping(path="/transferstatus/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer_status/{id}", method = RequestMethod.GET)
     public TransferStatus getTransferStatusFromId(@PathVariable int id) {
         return TransferStatusDao.getTransferStatusById(id);
     }
 
-    @RequestMapping(path="/transfers/user/{userId}/pending", method = RequestMethod.GET)
+    @RequestMapping(path="/transfer/tenmo_user/{userId}/pending", method = RequestMethod.GET)
     public List<Transfer> getPendingTransfersByUserId(@PathVariable int userId) {
         return TransferDao.getPendingTransfers(userId);
     }
 
-    @RequestMapping(path="/transfers/{id}", method = RequestMethod.PUT)
+    @RequestMapping(path="/transfer/{id}", method = RequestMethod.PUT)
     public void updateTransferStatus(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFunds {
 
         // only go through with the transfer if it is approved

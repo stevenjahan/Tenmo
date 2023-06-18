@@ -27,7 +27,7 @@ public class TenmoController {
     @Autowired
     TransferStatusDao TransferStatusDao;
 
-    @RequestMapping(path = "/account/user_id/balance", method = RequestMethod.GET)
+    @RequestMapping(path = "/account/{id}/balance", method = RequestMethod.GET)
     public Balance getBalance(Principal principal) {
         System.out.println(principal.getName());
         return AccountDao.getBalance(principal.getName());

@@ -26,20 +26,20 @@ class JdbcAccountDao implements AccountDao {
 
 
 
-    public BigDecimal getBalanceByUserId(Long user_id) {
+    public Balance getBalanceByUserId(int userId) {
         Account returnAccount = new Account();
 
         String sqlReturnAccount = "SELECT * "
                 + "FROM accounts "
                 + "WHERE user_id = ? ";
 
-        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlReturnAccount, user_id);
+        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlReturnAccount, userId);
 
         if(accountQuery.next()) {
             returnAccount =  mapResultsToAccount(accountQuery);
         }
 
-        return returnAccount.getBalance().getBalance();
+        return returnAccount.getBalance();
     }
     @Override
     public Account getAccountId(int accountId) {

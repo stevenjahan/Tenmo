@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import com.techelevator.tenmo.model.Balance;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Component;
@@ -43,6 +44,16 @@ class JdbcAccountDao implements AccountDao {
     @Override
     public boolean deleteAccount(Account account) {
         return false;
+    }
+
+    @Override
+    public List<Account> listAccounts() {
+        return null;
+    }
+
+    @Override
+    public void deleteAccount(int account_id) {
+
     }
 
     public BigDecimal getBalanceByUserId(Long user_id) {
@@ -95,77 +106,57 @@ class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public List<Account> listAccounts() {
-        List<Account> returnList = new ArrayList<Account>();
-
-        String sqlListAccounts = "SELECT * "
-                + "FROM accounts";
-
-
-        SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlListAccounts);
-
-        while(accountQuery.next()) {
-            Account theAccount =  mapRowToAccount(accountQuery);
-            returnList.add(theAccount);
+    public Balance getBalance(String user) {
+        String sql = "Select balance from accounts join users on accounts.user_id where username = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, user);
+        Balance balance = new Balance();
+        if (results.next()) {
+            String accountBalance = results.getString("balance");
+            balance.setBalance(new BigDecimal(accountBalance));
         }
-
-        return returnList;
-    }
-
-    public BigDecimal addToBalance(double amount_to_add, int account_id) {
-
-        Account updateAccount = getAccountById(account_id);
-
-        BigDecimal newBalance = updateAccount.getBalance();
-
-        String sqlUpdateAccount = "UPDATE accounts "
-                + "SET balance = ? WHERE account_id = ?";
-
-        jdbcTemplate.update(sqlUpdateAccount, newBalance, account_id);
-
-        return newBalance;
-    }
-
-    public BigDecimal subtractFromBalance(double amount_to_sub, int account_id) {
-
-        Account updateAccount = getAccountById(account_id);
-
-        BigDecimal newBalance = updateAccount.getBalance();
-
-        String sqlUpdateAccount = "UPDATE accounts "
-                + "SET balance = ? WHERE account_id = ?";
-
-        jdbcTemplate.update(sqlUpdateAccount, newBalance, account_id);
-
-        return newBalance;
+        return balance;
     }
 
     @Override
-    public void deleteAccount(int account_id) {
-        String sqlDeleteAccount = "DELETE from accounts where account_id = ? ";
-
-        jdbcTemplate.update(sqlDeleteAccount, account_id);
-
-    }
-
-    private Account mapRowToAccount(SqlRowSet results) {
-        Account theAccount = new Account();
-
-        theAccount.setAccount_id(results.getLong("account_id"));
-        theAccount.setUser_id(results.getInt("user_id"));
-        theAccount.setBalance(BigDecimal.valueOf(results.getDouble("balance")));
-
-        return theAccount;
-    }
-
-    private long getNextAccountId() {
-        SqlRowSet nextAccountIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_account_id')");
-
-        if(nextAccountIdResult.next()) {
-            return nextAccountIdResult.getLong(1);
-        }else {
-            throw new RuntimeException ("Something went wrong while getting an id for the new transfer");
+    public Account getAccountByUserId(int userId) {
+        String sql = "Select account_id, user_id, balance from accounts where user_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
+        Account account = null;
+        if (results.next()) {
+            account = mapRowToAccount(results);
         }
+        return account;
     }
+
+    @Override
+    public Account getAccountByAccountId(int accountId) {
+        String sql = "Select account_id, user_id, balance from accounts where account_id = ?;";
+        SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
+        Account account = null;
+        if (results.next()) {
+            account = mapResultsToAccount(results);
+        }
+        return account;
+    }
+
+    @Override
+    public void updateAccount(Account accountToUpdate) {
+        String sql = "Update accounts " +
+            "Set balance = ? " +
+            "where account_id = ?;";
+
+        jdbcTemplate.update(sql, accountToUpdate.getBalance(), accountToUpdate.getAccount_id());
+    }
+
+    private Account mapResultsToAccount(SqlRowSet results) {
+        int accountId = results.getInt("account_id");
+        int userAccountId = results.getInt("user_id");
+        Balance balance = new Balance();
+        String accountBalance = results.getString("balance");
+        balance.setBalance(new BigDecimal(accountBalance));
+        return new Account(accountId, userAccountId, balance);
+    }
+
+
 
 }

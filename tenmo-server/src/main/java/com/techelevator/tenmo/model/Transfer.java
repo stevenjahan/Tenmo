@@ -7,22 +7,22 @@ public class Transfer {
     private int transferId;
     private int transferTypeId;
     private int transferStatusId;
-    private int fromAccountNumber;
-    private int toAccountNumber;
-    private BigDecimal transferAmount;
+    private int accountFrom;
+    private int accountTo;
+    private BigDecimal amount;
 
     public Transfer() {
     }
 
     public Transfer(int transferId, int transferTypeId,
                     int transferStatusId, int fromAccountNumber,
-                    int toAccountNumber, BigDecimal transferAmount) {
+                    int accountTo, BigDecimal amount) {
         this.transferId = transferId;
         this.transferTypeId = transferTypeId;
         this.transferStatusId = transferStatusId;
-        this.fromAccountNumber = fromAccountNumber;
-        this.toAccountNumber = toAccountNumber;
-        this.transferAmount = transferAmount;
+        this.accountFrom = fromAccountNumber;
+        this.accountTo = accountTo;
+        this.amount = amount;
     }
 
     public int getTransferId() {
@@ -49,28 +49,28 @@ public class Transfer {
         this.transferStatusId = transferStatusId;
     }
 
-    public int getFromAccountNumber() {
-        return fromAccountNumber;
+    public int getAccountFrom() {
+        return accountFrom;
     }
 
-    public void setFromAccountNumber(int fromAccountNumber) {
-        this.fromAccountNumber = fromAccountNumber;
+    public void setAccountFrom(int accountFrom) {
+        this.accountFrom = accountFrom;
     }
 
-    public int getToAccountNumber() {
-        return toAccountNumber;
+    public int getAccountTo() {
+        return accountTo;
     }
 
-    public void setToAccountNumber(int toAccountNumber) {
-        this.toAccountNumber = toAccountNumber;
+    public void setAccountTo(int accountTo) {
+        this.accountTo = accountTo;
     }
 
-    public BigDecimal getTransferAmount() {
-        return transferAmount;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setTransferAmount(BigDecimal transferAmount) {
-        this.transferAmount = transferAmount;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
     @Override
@@ -79,9 +79,9 @@ public class Transfer {
                 "transferId=" + transferId +
                 ", transferTypeId=" + transferTypeId +
                 ", transferStatusId=" + transferStatusId +
-                ", fromAccountNumber=" + fromAccountNumber +
-                ", toAccountNumber=" + toAccountNumber +
-                ", transferAmount=" + transferAmount +
+                ", fromAccountNumber=" + accountFrom +
+                ", toAccountNumber=" + accountTo +
+                ", transferAmount=" + amount +
                 '}';
     }
 }

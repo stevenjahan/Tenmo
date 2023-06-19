@@ -23,7 +23,11 @@ public class RestTransferService implements TransferService {
     @Override
     public void createTransfer(AuthenticatedUser authenticatedUser, Transfer transfer) {
         try {
-            restTemplate.exchange(baseUrl, HttpMethod.POST, makeEntity(authenticatedUser), Transfer.class);
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            headers.setBearerAuth(authenticatedUser.getToken());
+            HttpEntity<Transfer> entity = new HttpEntity<>(transfer, headers);
+            restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, entity,Transfer.class);
         } catch(RestClientResponseException e) {
             if (e.getMessage().contains("Insufficient funds")) {
                 System.out.println("You do not have enough money for that transaction.");

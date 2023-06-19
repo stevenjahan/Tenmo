@@ -24,13 +24,14 @@ public class RestTransferTypeService implements TransferTypeService {
         TransferType transferType = null;
 
         try {
-            String url = baseUrl + "/transfertype/filter?description=" + description;
+            String url = baseUrl + "transfer_type/filter/" + description;
             transferType = restTemplate.exchange(url, HttpMethod.GET, makeEntity(authenticatedUser), TransferType.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request: Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
             System.out.println("Could not complete the request due to server network issues. Please try again later.");
         }
+        transferType.setTransferTypeDesc(description);
         return transferType;
     }
 
@@ -39,7 +40,7 @@ public class RestTransferTypeService implements TransferTypeService {
         TransferType transferType = null;
 
         try {
-            String url = baseUrl + "/transfertype/" + transferTypeId;
+            String url = baseUrl + "transfer_type/" + transferTypeId;
             transferType = restTemplate.exchange(url, HttpMethod.GET, makeEntity(authenticatedUser), TransferType.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());

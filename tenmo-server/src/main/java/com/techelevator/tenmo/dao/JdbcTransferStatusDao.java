@@ -35,7 +35,7 @@ public class JdbcTransferStatusDao implements TransferStatusDao{
     @Override
     public TransferStatus getTransferStatusByDesc(String description) {
         String sql = "SELECT transfer_status_id, transfer_status_desc " +
-                "FROM transfer_statuses " +
+                "FROM transfer_status " +
                 "WHERE transfer_status_desc = ?";
 
         SqlRowSet result = jdbcTemplate.queryForRowSet(sql, description);

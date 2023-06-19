@@ -19,7 +19,18 @@ public class RestTransferStatusService implements TransferStatusService {
 
     @Override
     public TransferStatus getTransferStatus(AuthenticatedUser authenticatedUser, String description) {
-        return null;
+        TransferStatus transferStatus = null;
+
+        try {
+            String url = baseUrl + "transfer_status/filter/" + description;
+            transferStatus = restTemplate.exchange(url, HttpMethod.GET, makeEntity(authenticatedUser), TransferStatus.class).getBody();
+        } catch (RestClientResponseException e) {
+            System.out.println("Could not complete the request. Code " + e.getRawStatusCode());
+        } catch (ResourceAccessException e) {
+            System.out.println("Could not complete the request due to server network issues.  Please try again later.");
+        }
+        transferStatus.setTransferStatusDesc(description);
+        return transferStatus;
     }
 
     @Override
@@ -27,7 +38,7 @@ public class RestTransferStatusService implements TransferStatusService {
         TransferStatus transferStatus = null;
 
         try {
-            String url = baseUrl + "/transferstatus/" + transferStatusId;
+            String url = baseUrl + "transfer_status/" + transferStatusId;
             transferStatus = restTemplate.exchange(url, HttpMethod.GET, makeEntity(authenticatedUser), TransferStatus.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code " + e.getRawStatusCode());

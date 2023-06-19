@@ -12,8 +12,8 @@ public class TransferTypeController {
     @Autowired
     TransferTypeDao TransferTypeDao;
 
-    @RequestMapping(path="/transfer_type/filter", method = RequestMethod.GET)
-    public TransferType getTransferTypeFromDescription(@RequestParam String description) {
+    @RequestMapping(path="/transfer_type/filter/{description}", method = RequestMethod.GET)
+    public TransferType getTransferTypeFromDescription(@PathVariable String description) {
         return TransferTypeDao.getTransferTypeFromDescription(description);
     }
 

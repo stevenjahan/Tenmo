@@ -29,12 +29,12 @@ public class TransferController {
 
 
     @ResponseStatus(HttpStatus.CREATED)
-    @RequestMapping(path = "/transfer/{id}", method = RequestMethod.POST)
-    public void addTransfer(@RequestBody Transfer transfer, @PathVariable int id) throws InsufficientFunds {
+    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
+    public void addTransfer(@RequestBody Transfer transfer) throws InsufficientFunds {
 
-        BigDecimal amountToTransfer = (BigDecimal) transfer.getTransferAmount();
-        Account accountFrom = AccountDao.getAccountId(transfer.getFromAccountNumber());
-        Account accountTo = AccountDao.getAccountId(transfer.getToAccountNumber());
+        BigDecimal amountToTransfer = (BigDecimal) transfer.getAmount();
+        Account accountFrom = AccountDao.getAccountByAccountId(transfer.getAccountFrom());
+        Account accountTo = AccountDao.getAccountByAccountId(transfer.getAccountTo());
 
         accountFrom.getBalance().sendMoney(amountToTransfer);
         accountTo.getBalance().receiveMoney(amountToTransfer);
@@ -56,7 +56,7 @@ public class TransferController {
     }
 
 
-    @RequestMapping(path = "/transfers", method = RequestMethod.GET)
+    @RequestMapping(path = "/transfer", method = RequestMethod.GET)
     public List<Transfer> getAllTransfers() {
         return TransferDao.getAllTransfers();
     }
@@ -73,9 +73,9 @@ public class TransferController {
         // only go through with the transfer if it is approved
         if (transfer.getTransferStatusId() == TransferStatusDao.getTransferStatusByDesc("Approved").getTransferStatus()) {
 
-            BigDecimal amountToTransfer = (BigDecimal) transfer.getTransferAmount();
-            Account accountFrom = AccountDao.getAccountByAccountId(transfer.getFromAccountNumber());
-            Account accountTo = AccountDao.getAccountByAccountId(transfer.getToAccountNumber());
+            BigDecimal amountToTransfer = (BigDecimal) transfer.getAmount();
+            Account accountFrom = AccountDao.getAccountByAccountId(transfer.getAccountFrom());
+            Account accountTo = AccountDao.getAccountByAccountId(transfer.getAccountTo());
 
             accountFrom.getBalance().sendMoney(amountToTransfer);
             accountTo.getBalance().receiveMoney(amountToTransfer);

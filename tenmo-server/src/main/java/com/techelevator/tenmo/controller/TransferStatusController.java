@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
-public class TansferStatusController {
+public class TransferStatusController {
 
     @Autowired
     TransferStatusDao TransferStatusDao;
 
-    @RequestMapping(path="/transfer_status/filter", method = RequestMethod.GET)
-    public TransferStatus getTransferStatusByDescription(@RequestParam String description) {
+    @RequestMapping(path="/transfer_status/filter/{description}", method = RequestMethod.GET)
+    public TransferStatus getTransferStatusByDescription(@PathVariable String description) {
         return TransferStatusDao.getTransferStatusByDesc(description);
     }
     @RequestMapping(path="/transfer_status/{id}", method = RequestMethod.GET)

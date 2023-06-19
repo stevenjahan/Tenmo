@@ -30,7 +30,7 @@ class JdbcAccountDao implements AccountDao {
         Account returnAccount = new Account();
 
         String sqlReturnAccount = "SELECT * "
-                + "FROM accounts "
+                + "FROM account "
                 + "WHERE user_id = ? ";
 
         SqlRowSet accountQuery = jdbcTemplate.queryForRowSet(sqlReturnAccount, userId);
@@ -45,7 +45,7 @@ class JdbcAccountDao implements AccountDao {
     public Account getAccountId(int accountId) {
         Account newAccount = new Account();
         String sqlGetAccount = "SELECT * "
-                + "FROM accounts "
+                + "FROM account "
                 + "WHERE account_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAccount, accountId);
         if (results.next()) {
@@ -72,7 +72,7 @@ class JdbcAccountDao implements AccountDao {
 
     @Override
     public Account getAccountByUserId(int userId) {
-        String sql = "Select account_id, user_id, balance from accounts where user_id = ?;";
+        String sql = "Select account_id, user_id, balance from account where user_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         Account account = null;
         if (results.next()) {
@@ -83,7 +83,7 @@ class JdbcAccountDao implements AccountDao {
 
     @Override
     public Account getAccountByAccountId(int accountId) {
-        String sql = "Select account_id, user_id, balance from accounts where account_id = ?;";
+        String sql = "Select account_id, user_id, balance from account where account_id = ?;";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, accountId);
         Account account = null;
         if (results.next()) {
@@ -96,11 +96,11 @@ class JdbcAccountDao implements AccountDao {
 
     @Override
     public Account updateAccount(Account accountToUpdate) {
-        String sql = "Update accounts " +
+        String sql = "Update account " +
             "Set balance = ? " +
             "where account_id = ?;";
 
-        jdbcTemplate.update(sql, accountToUpdate.getBalance(), accountToUpdate.getAccountId());
+        jdbcTemplate.update(sql, accountToUpdate.getBalance().getBalance(), accountToUpdate.getAccountId());
         return accountToUpdate;
     }
 

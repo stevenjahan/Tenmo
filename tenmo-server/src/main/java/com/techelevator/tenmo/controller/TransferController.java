@@ -46,7 +46,7 @@ public class TransferController {
     }
 
     @RequestMapping(path = "/transfer/tenmo_user/{userId}", method = RequestMethod.GET)
-    public List<Transfer> getTransfersByUserId(@PathVariable int userId) {
+    public List<Transfer> getTransfersFromUserId(@PathVariable int userId) {
         return TransferDao.getTransfersByUserId(userId);
     }
 

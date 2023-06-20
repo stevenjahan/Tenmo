@@ -1,9 +1,13 @@
 package com.techelevator.tenmo.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.springframework.data.annotation.Id;
+
+import javax.annotation.Generated;
 import java.math.BigDecimal;
 
 public class Transfer {
-
+    @JsonIgnore
     private int transferId;
     private int transferTypeId;
     private int transferStatusId;

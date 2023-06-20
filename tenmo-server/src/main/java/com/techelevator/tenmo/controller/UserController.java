@@ -25,7 +25,7 @@ public class UserController {
         return UserDao.findAll();
     }
 
-    @RequestMapping(path="/tenmo_users/{id}", method = RequestMethod.GET)
+    @RequestMapping(path="/tenmo_user/{id}", method = RequestMethod.GET)
     public User getUserByUserId(@PathVariable int id) {
 
         return UserDao.getUserById(id);

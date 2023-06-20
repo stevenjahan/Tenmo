@@ -20,14 +20,14 @@ public class JdbcTransferDao implements TransferDao {
     @Override
     public void createTransfer(Transfer transfer) {
         String sql = "INSERT INTO transfer (transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount) VALUES (?, ?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, transfer.getTransferId(), transfer.getTransferTypeId(), 2, transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
+        jdbcTemplate.update(sql, transfer.getTransferId(), transfer.getTransferTypeId(), transfer.getTransferStatusId(), transfer.getAccountFrom(), transfer.getAccountTo(), transfer.getAmount());
     }
 
     @Override
     public List<Transfer> getTransfersByUserId(int userId) {
         String sql = "SELECT transfer_id, transfer_type_id, transfer_status_id, account_from, account_to, amount " +
                 "FROM transfer " +
-                "JOIN accounts ON accounts.account_id = transfers.account_from OR accounts.account_id = transfers.account_to " +
+                "JOIN account ON account.account_id = transfer.account_from OR account.account_id = transfer.account_to " +
                 "WHERE user_id = ?";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         List<Transfer> transfers = new ArrayList<>();
@@ -90,10 +90,10 @@ public class JdbcTransferDao implements TransferDao {
 
     @Override
     public List<Transfer> getPendingTransfers(int userId) {
-        String sql = "SELECT transfer_id, transfer_type_id, transfers.transfer_status_id, account_from, account_to, amount " +
+        String sql = "SELECT transfer_id, transfer_type_id, transfer.transfer_status_id, account_from, account_to, amount " +
                 "FROM transfer " +
                 "JOIN account ON account.account_id = transfer.account_from " +
-                "JOIN transfer_status ON transfers.transfer_status_id = transfer_status.transfer_status_id " +
+                "JOIN transfer_status ON transfer.transfer_status_id = transfer_status.transfer_status_id " +
                 "WHERE user_id = ? AND transfer_status_desc = 'Pending'";
         SqlRowSet results = jdbcTemplate.queryForRowSet(sql, userId);
         List<Transfer> transfers = new ArrayList<>();

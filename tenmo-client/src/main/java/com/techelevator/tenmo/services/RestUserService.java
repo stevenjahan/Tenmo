@@ -26,7 +26,7 @@ public class RestUserService implements UserService{
         User[] users = null;
 
         try {
-            users = restTemplate.exchange(baseUrl + "/tenmo_user", HttpMethod.GET, makeEntity(authenticatedUser), User[].class).getBody();
+            users = restTemplate.exchange(baseUrl + "tenmo_user", HttpMethod.GET, makeEntity(authenticatedUser), User[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -40,7 +40,7 @@ public class RestUserService implements UserService{
         User user = null;
 
         try {
-            user = restTemplate.exchange(baseUrl + "/tenmo_user/" + id, HttpMethod.GET, makeEntity(authenticatedUser), User.class).getBody();
+            user = restTemplate.exchange(baseUrl + "tenmo_user/" + id, HttpMethod.GET, makeEntity(authenticatedUser), User.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {

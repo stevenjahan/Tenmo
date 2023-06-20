@@ -43,7 +43,7 @@ public class RestTransferService implements TransferService {
     public Transfer[] getTransfersFromUserId(AuthenticatedUser authenticatedUser, int userId) {
         Transfer[] transfers = null;
         try{
-            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + userId, HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
+            transfers = restTemplate.exchange(baseUrl + "transfer/tenmo_user/" + userId, HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -56,7 +56,7 @@ public class RestTransferService implements TransferService {
     public Transfer getTransferFromTransferId(AuthenticatedUser authenticatedUser, int id) {
         Transfer transfer = null;
         try {
-            transfer = restTemplate.exchange(baseUrl + "/transfers/" + id, HttpMethod.GET, makeEntity(authenticatedUser), Transfer.class).getBody();
+            transfer = restTemplate.exchange(baseUrl + "/transfer/" + id, HttpMethod.GET, makeEntity(authenticatedUser), Transfer.class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -70,7 +70,7 @@ public class RestTransferService implements TransferService {
         Transfer[] transfers = new Transfer[0];
 
         try {
-            transfers = restTemplate.exchange(baseUrl + "/transfers", HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
+            transfers = restTemplate.exchange(baseUrl + "/transfer", HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {
@@ -90,7 +90,7 @@ public class RestTransferService implements TransferService {
     public Transfer[] getPendingTransfersByUserId(AuthenticatedUser authenticatedUser) {
         Transfer[] transfers = null;
         try {
-            transfers = restTemplate.exchange(baseUrl + "/transfers/user/" + authenticatedUser.getUser().getId() + "/pending", HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
+            transfers = restTemplate.exchange(baseUrl + "transfer/tenmo_user/" + authenticatedUser.getUser().getId() + "/pending", HttpMethod.GET, makeEntity(authenticatedUser), Transfer[].class).getBody();
         } catch (RestClientResponseException e) {
             System.out.println("Could not complete the request. Code: " + e.getRawStatusCode());
         } catch (ResourceAccessException e) {

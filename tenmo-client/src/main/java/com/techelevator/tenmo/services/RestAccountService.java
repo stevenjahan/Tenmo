@@ -46,7 +46,9 @@ public class RestAccountService implements AccountService{
         } catch(ResourceAccessException e) {
             System.out.println("Could not complete request due to server network issues.  Please try again later.");
         }
-        account.setUserId(userId);
+        if(account.getUserId() != userId) {
+            account.setUserId(userId);
+        }
         return account;
     }
 

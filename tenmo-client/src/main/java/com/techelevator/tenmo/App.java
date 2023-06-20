@@ -22,6 +22,7 @@ public class App {
     private AuthenticatedUser currentUser;
 
     private static int transferIdNumber;
+    private static int transferStatusId;
 
     public static void main(String[] args) {
         App app = new App();
@@ -186,7 +187,7 @@ public class App {
             String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
             fromOrTo = "From: " + userFromName;
         } else {
-            int accountToUserId = accountService.getAccountById(currentUser, accountTo).getUserId();
+            int accountToUserId = accountService.getAccountByUserId(currentUser, accountTo).getUserId();
             String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
             fromOrTo = "To: " + userToName;
         }
@@ -234,9 +235,11 @@ public class App {
         transfer.setAccountFrom(accountFromId);
         transfer.setAccountTo(accountToId);
         transfer.setAmount(amount);
-        transfer.setTransferStatusId(transferStatusId);
+        transfer.setTransferStatusId(transferStatusId +1);
         transfer.setTransferTypeId(transferTypeId);
-        transfer.setTransferId(transferIdNumber);
+        transfer.setTransferId(transferTypeId + 1);
+
+
 
         transferService.createTransfer(currentUser, transfer);
         // increment transferIdNumber so it is always unique

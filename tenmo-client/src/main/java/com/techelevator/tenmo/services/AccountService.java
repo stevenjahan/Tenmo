@@ -8,5 +8,5 @@ import com.techelevator.tenmo.model.Balance;
 public interface AccountService {
     Balance getBalance(AuthenticatedUser authenticatedUser);
     Account getAccountByUserId(AuthenticatedUser authenticatedUser, int userId);
-    Account getAccountById(AuthenticatedUser authenticatedUser, int accountID);
+    Account getAccountByAccountId(AuthenticatedUser authenticatedUser, int accountID);
 }

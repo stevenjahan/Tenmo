@@ -36,6 +36,7 @@ public class App {
             mainMenu();
         }
     }
+
     public static void incrementTransferIdNumber() {
         transferIdNumber++;
     }
@@ -110,7 +111,7 @@ public class App {
         System.out.println("ID     From/To          Amount");
         System.out.println("-------------------------------");
 
-        int currentUserAccountId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+        //int currentUserAccountId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getUserId();
         for (Transfer transfer : transfers) {
             printTransferStubDetails(currentUser, transfer);
         }
@@ -161,7 +162,7 @@ public class App {
         }
     }
 
-    private void printTransferDetails (AuthenticatedUser currentUser, Transfer transferChoice){
+    private void printTransferDetails(AuthenticatedUser currentUser, Transfer transferChoice) {
         int id = transferChoice.getTransferId();
         BigDecimal amount = transferChoice.getAmount();
         int fromAccount = transferChoice.getAccountFrom();
@@ -169,30 +170,31 @@ public class App {
         int transactionTypeId = transferChoice.getTransferTypeId();
         int transactionStatusId = transferChoice.getTransferStatusId();
 
-        int fromUserId = accountService.getAccountById(currentUser, fromAccount).getUserId();
+        int fromUserId = accountService.getAccountByAccountId(currentUser, fromAccount).getUserId();
         String fromUserName = userService.getUserByUserId(currentUser, fromUserId).getUsername();
-        int toUserId = accountService.getAccountById(currentUser, toAccount).getUserId();
+        int toUserId = accountService.getAccountByAccountId(currentUser, toAccount).getUserId();
         String toUserName = userService.getUserByUserId(currentUser, toUserId).getUsername();
         String transactionType = transferTypeService.getTransferTypeFromId(currentUser, transactionTypeId).getTransferTypeDesc();
         String transactionStatus = transferStatusService.getTransferStatusById(currentUser, transactionStatusId).getTransferStatusDesc();
 
         System.out.println(fromUserName + toUserName + transactionType + transactionStatus);
     }
+
     private void printTransferStubDetails(AuthenticatedUser authenticatedUser, Transfer transfer) {
         String fromOrTo = "";
         int accountFrom = transfer.getAccountFrom();
         int accountTo = transfer.getAccountTo();
-        if (accountService.getAccountById(currentUser, accountTo).getUserId() == authenticatedUser.getUser().getId()) {
-            int accountFromUserId = accountService.getAccountById(currentUser, accountFrom).getUserId();
+        if (accountService.getAccountByAccountId(currentUser, accountTo).getUserId() == authenticatedUser.getUser().getId()) {
+            int accountFromUserId = accountService.getAccountByAccountId(currentUser, accountFrom).getUserId();
             String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
-            fromOrTo = "From: " + userFromName;
+            fromOrTo = "     From: " + userFromName;
         } else {
-            int accountToUserId = accountService.getAccountByUserId(currentUser, accountTo).getUserId();
+            int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getAccountId();
             String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
-            fromOrTo = "To: " + userToName;
+            fromOrTo = "     To:         " + userToName;
         }
 
-        System.out.println(transfer.getTransferId() + fromOrTo + transfer.getAmount());
+        System.out.println(transfer.getTransferId() + fromOrTo + "            " + transfer.getAmount());
     }
 
     private void approveOrReject(Transfer pendingTransfer, AuthenticatedUser authenticatedUser) {
@@ -200,8 +202,8 @@ public class App {
         consoleService.printApproveOrRejectOptions();
         int choice = consoleService.promptForInt("Please choose an option");
 
-        if(choice != 0) {
-            if(choice == 1) {
+        if (choice != 0) {
+            if (choice == 1) {
                 int transferStatusId = transferStatusService.getTransferStatus(currentUser, "Approved").getTransferStatusId();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else if (choice == 2) {
@@ -215,18 +217,18 @@ public class App {
 
     }
 
-    private Transfer createTransfer (int accountChoiceUserId, String amountString, String transferType, String status){
+    private Transfer createTransfer(int accountChoiceUserId, String amountString, String transferType, String status) {
 
         int transferTypeId = transferTypeService.getTransferType(currentUser, transferType).getTransferTypeId();
         int transferStatusId = transferStatusService.getTransferStatus(currentUser, status).getTransferStatusId();
         int accountToId;
         int accountFromId;
-        if(transferType.equals("Send")) {
-            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
-            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+        if (transferType.equals("Send")) {
+            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getUserId();
+            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getUserId();
         } else {
-            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
-            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
+            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getUserId();
+            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getUserId();
         }
 
         BigDecimal amount = new BigDecimal(amountString);
@@ -235,10 +237,9 @@ public class App {
         transfer.setAccountFrom(accountFromId);
         transfer.setAccountTo(accountToId);
         transfer.setAmount(amount);
-        transfer.setTransferStatusId(transferStatusId +1);
+        transfer.setTransferStatusId(transferStatusId + 1);
         transfer.setTransferTypeId(transferTypeId);
         transfer.setTransferId(transferTypeId + 1);
-
 
 
         transferService.createTransfer(currentUser, transfer);

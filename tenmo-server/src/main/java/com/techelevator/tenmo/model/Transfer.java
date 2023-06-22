@@ -7,7 +7,7 @@ import javax.annotation.Generated;
 import java.math.BigDecimal;
 
 public class Transfer {
-    @JsonIgnore
+    @Id
     private int transferId;
     private int transferTypeId;
     private int transferStatusId;

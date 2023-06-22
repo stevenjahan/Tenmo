@@ -1,7 +1,12 @@
 package com.techelevator.tenmo.model;
 
-public class Account {
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.annotation.Id;
 
+import javax.annotation.Generated;
+
+public class Account {
+    @Id
     private int accountId;
     private int userId;
     private Balance balance;
@@ -35,7 +40,7 @@ public class Account {
         this.balance = balance;
     }
 
-    public int getUserId(int userId) {
+    public int getUserId() {
         return userId;
     }
 

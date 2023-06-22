@@ -106,7 +106,7 @@ public class RestTransferService implements TransferService {
         headers.setBearerAuth(authenticatedUser.getToken());
         HttpEntity<Transfer> entity = new HttpEntity(transfer, headers);
 
-        String url = baseUrl + "/transfers/" + transfer.getTransferId();
+        String url = baseUrl + "transfer/" + transfer.getTransferId();
 
         try {
             restTemplate.exchange(url, HttpMethod.PUT, entity, Transfer.class);

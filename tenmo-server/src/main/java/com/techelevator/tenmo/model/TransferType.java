@@ -1,6 +1,9 @@
 package com.techelevator.tenmo.model;
 
+import org.springframework.data.annotation.Id;
+
 public class TransferType {
+    @Id
     private int transferTypeId;
     private String transferDescription;
 

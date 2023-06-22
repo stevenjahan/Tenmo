@@ -189,7 +189,7 @@ public class App {
             String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
             fromOrTo = "     From: " + userFromName;
         } else {
-            int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getAccountId();
+            int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
             String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();
             fromOrTo = "     To:         " + userToName;
         }
@@ -204,10 +204,10 @@ public class App {
 
         if (choice != 0) {
             if (choice == 1) {
-                int transferStatusId = transferStatusService.getTransferStatus(currentUser, "Approved").getTransferStatusId();
+                int transferStatusId = transferStatusService.getTransferStatus(currentUser, "Approved").getTransferStatus();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else if (choice == 2) {
-                int transferStatusId = transferStatusService.getTransferStatus(currentUser, "Rejected").getTransferStatusId();
+                int transferStatusId = transferStatusService.getTransferStatus(currentUser, "Rejected").getTransferStatus();
                 pendingTransfer.setTransferStatusId(transferStatusId);
             } else {
                 System.out.println("Invalid choice.");
@@ -220,15 +220,15 @@ public class App {
     private Transfer createTransfer(int accountChoiceUserId, String amountString, String transferType, String status) {
 
         int transferTypeId = transferTypeService.getTransferType(currentUser, transferType).getTransferTypeId();
-        int transferStatusId = transferStatusService.getTransferStatus(currentUser, status).getTransferStatusId();
+        int transferStatusId = transferStatusService.getTransferStatus(currentUser, status).getTransferStatus();
         int accountToId;
         int accountFromId;
         if (transferType.equals("Send")) {
-            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getUserId();
-            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getUserId();
+            accountToId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
+            accountFromId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
         } else {
-            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getUserId();
-            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getUserId();
+            accountToId = accountService.getAccountByUserId(currentUser, currentUser.getUser().getId()).getAccountId();
+            accountFromId = accountService.getAccountByUserId(currentUser, accountChoiceUserId).getAccountId();
         }
 
         BigDecimal amount = new BigDecimal(amountString);

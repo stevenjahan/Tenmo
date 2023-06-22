@@ -41,7 +41,6 @@ public class RestAccountService implements AccountService{
         Account account = null;
         try {
             account = restTemplate.exchange(baseUrl + "account/tenmo_user/" + userId, HttpMethod.GET, createHttpEntity(authenticatedUser), Account.class).getBody();
-            System.out.println("noting");
         } catch(RestClientResponseException e) {
             System.out.println("Could not complete request. Code: " + e.getRawStatusCode());
         } catch(ResourceAccessException e) {
@@ -63,7 +62,6 @@ public class RestAccountService implements AccountService{
         } catch(ResourceAccessException e) {
             System.out.println("Could not complete request due to server network issues. Please try again later.");
         }
-        account.setUserId(authenticatedUser.getUser().getId());
         return account;
     }
 

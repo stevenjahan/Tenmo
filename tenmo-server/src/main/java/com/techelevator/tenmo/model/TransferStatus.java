@@ -1,7 +1,10 @@
 package com.techelevator.tenmo.model;
 
+import org.springframework.data.annotation.Id;
+
 public class TransferStatus {
 
+    @Id
     private int transferStatus;
     private String transferStatusDesc;
 

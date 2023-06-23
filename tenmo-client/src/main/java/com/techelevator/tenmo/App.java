@@ -149,7 +149,17 @@ public class App {
         if (userService.validateUserChoice(userIdChoice, users, currentUser)) {
             String amountChoice = consoleService.promptForString("Enter amount");
             createTransfer(userIdChoice, amountChoice, "Send", "Approved");
+            System.out.println("-------------------------------");
+            System.out.println("Transfer Details");
+            System.out.println("-------------------------------");
+            System.out.println("Id: " );
+            System.out.println("From " + currentUser.getUser().getUsername());
+            System.out.println("To: " + userService.getUserByUserId(currentUser, userIdChoice).getUsername());
+            System.out.println("Status: " );
+            System.out.println("Amount: $" + amountChoice);
+
         }
+
     }
 
     private void requestBucks() {
@@ -177,7 +187,15 @@ public class App {
         String transactionType = transferTypeService.getTransferTypeFromId(currentUser, transactionTypeId).getTransferTypeDesc();
         String transactionStatus = transferStatusService.getTransferStatusById(currentUser, transactionStatusId).getTransferStatusDesc();
 
-        System.out.println(fromUserName + toUserName + transactionType + transactionStatus);
+        System.out.println("-------------------------------");
+        System.out.println("Transfer Details");
+        System.out.println("-------------------------------");
+        System.out.println("Id: " + transactionStatusId);
+        System.out.println("From " + fromUserName);
+        System.out.println("To: " + toUserName);
+        System.out.println("Status: " + transactionStatus);
+        System.out.println("Amount: $" + amount);
+        //System.out.println(fromUserName + " " + toUserName + " " + transactionType + " " + transactionStatus);
     }
 
     private void printTransferStubDetails(AuthenticatedUser authenticatedUser, Transfer transfer) {
@@ -187,7 +205,7 @@ public class App {
         if (accountService.getAccountByAccountId(currentUser, accountTo).getUserId() == authenticatedUser.getUser().getId()) {
             int accountFromUserId = accountService.getAccountByAccountId(currentUser, accountFrom).getUserId();
             String userFromName = userService.getUserByUserId(currentUser, accountFromUserId).getUsername();
-            fromOrTo = "     From: " + userFromName;
+            fromOrTo = "     From:       " + userFromName;
         } else {
             int accountToUserId = accountService.getAccountByAccountId(currentUser, accountTo).getUserId();
             String userToName = userService.getUserByUserId(currentUser, accountToUserId).getUsername();

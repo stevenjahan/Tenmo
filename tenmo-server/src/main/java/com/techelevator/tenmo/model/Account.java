@@ -1,9 +1,8 @@
 package com.techelevator.tenmo.model;
 
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.data.annotation.Id;
 
-import javax.annotation.Generated;
 
 public class Account {
     @Id
